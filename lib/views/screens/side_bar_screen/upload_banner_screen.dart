@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/_internal/file_picker_web.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class UploadBannerScreen extends StatefulWidget {
   static const String routerName = "UploadBannerScreen";
@@ -12,6 +15,8 @@ class UploadBannerScreen extends StatefulWidget {
 }
 
 class _UploadBannerScreenState extends State<UploadBannerScreen> {
+  final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   dynamic image;
   late String fileName = '';
 
@@ -26,9 +31,36 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
     }
   }
 
+  uploadBannerToStorage(dynamic image) async {
+    Reference ref = _firebaseStorage.ref().child("Banners").child(fileName);
+    UploadTask uploadTask = ref.putData(image);
+    TaskSnapshot snapshot = await uploadTask;
+    String dowUrl = await snapshot.ref.getDownloadURL();
+    return dowUrl;
+  }
+
+  uploadToFirebaseStore() async {
+    EasyLoading.show();
+    if (image != null) {
+      String imageUrl = await uploadBannerToStorage(image);
+      await _firebaseFirestore
+          .collection("banners")
+          .doc(fileName)
+          .set({'image': imageUrl}).whenComplete(
+        () {
+          EasyLoading.dismiss();
+          if (mounted) {
+            setState(() {
+              image = null;
+            });
+          }
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    print(fileName);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -66,7 +98,12 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
                           ),
                   ),
                 ),
-                ElevatedButton(onPressed: () {}, child: Text("Save"))
+                ElevatedButton(
+                  onPressed: () {
+                    uploadToFirebaseStore();
+                  },
+                  child: const Text("Save"),
+                )
               ],
             ),
             Padding(
