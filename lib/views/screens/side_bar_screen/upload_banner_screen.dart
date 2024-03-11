@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_admin_web/views/screens/side_bar_screen/widgets/banner_widget.dart';
 import 'package:file_picker/_internal/file_picker_web.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -114,7 +115,12 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
                 },
                 child: const Text("Upload Image"),
               ),
-            )
+            ),
+            Divider(
+              color: Colors.grey,
+            ),
+            const Text("Banners", style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),),
+            const BannerWidget()
           ],
         ),
       ),
