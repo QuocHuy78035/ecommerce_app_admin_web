@@ -146,14 +146,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   child: const Text("Upload Image"),
                 ),
               ),
-              Divider(
+              const Divider(
                 color: Colors.grey,
               ),
-              Text(
+              const Text(
                 "Category",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 36),
               ),
-              CategoryWidget()
+              const CategoryWidget()
             ],
           ),
         ),
