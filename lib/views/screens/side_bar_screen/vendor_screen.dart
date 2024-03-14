@@ -1,3 +1,4 @@
+import 'package:ecommerce_admin_web/views/screens/side_bar_screen/widgets/vendor_widget.dart';
 import 'package:flutter/material.dart';
 
 class VendorScreen extends StatefulWidget {
@@ -53,7 +54,8 @@ class _VendorScreenState extends State<VendorScreen> {
                 _rowHeader("ACTION", 1),
                 _rowHeader("VIEW MORE", 1),
               ],
-            )
+            ),
+            VendorWidget()
           ],
         ),
       ),
